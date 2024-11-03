@@ -1,6 +1,5 @@
-from bookshelf.models import Book
-# Retrieve the book
-book = Book.objects.get(pk=1)  # Replace 1 with the actual ID
-
-# Expected Output: Shows all attributes of the created book
-print(book)
+### Retrieve Operation
+Command:
+```python
+retrieved_book = Book.objects.get(title="1984")
+print("Retrieved book:", retrieved_book)
