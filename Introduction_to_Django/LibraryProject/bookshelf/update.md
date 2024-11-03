@@ -1,8 +1,8 @@
 from bookshelf.models import Book
 
-book = Book.objects.get(pk=1)  # Replace 1 with the actual ID
-
+# Update the title
 book.title = "Nineteen Eighty-Four"
 book.save()
 
+# Expected Output: Shows the updated title
 print(book)

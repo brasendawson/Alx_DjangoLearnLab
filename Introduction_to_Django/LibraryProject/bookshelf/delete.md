@@ -1,5 +1,8 @@
 from bookshelf.models import Book
 
-book = Book.objects.get(pk=1)  # Replace 1 with the actual ID
+# Delete the book
+book.delete()
 
-book
+# Confirm deletion (should raise an error)
+books = Book.objects.all()
+print(books)
