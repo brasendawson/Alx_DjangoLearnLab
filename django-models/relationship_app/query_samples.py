@@ -1,20 +1,16 @@
 import os
 import django
 
-# Setup Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')  # Make sure 'myproject' is your actual project name
 django.setup()
 
 from relationship_app.models import Author, Book, Library, Librarian
 
-
-# 1. Query all books by a specific author using filter
 def get_books_by_author(author_name):
     try:
-        # Get the author object
+
         author = Author.objects.get(name=author_name)
         
-        # Use filter to get books written by the author
         books_by_author = Book.objects.filter(author=author)
         
         if books_by_author.exists():
@@ -27,7 +23,6 @@ def get_books_by_author(author_name):
         print(f"No author found with the name '{author_name}'.")
 
 
-# 2. List all books in a specific library
 def list_books_in_library(library_name):
     try:
         library = Library.objects.get(name=library_name)
@@ -39,13 +34,11 @@ def list_books_in_library(library_name):
         print(f"No library found with the name '{library_name}'.")
 
 
-# 3. Retrieve the librarian for a specific library using OneToOne relationship
 def get_librarian_for_library(library_name):
     try:
         # Get the library object
         library = Library.objects.get(name=library_name)
         
-        # Retrieve the librarian using the OneToOne relationship
         librarian = Librarian.objects.get(library=library)
         
         print(f"\nLibrarian for {library_name}: {librarian.name}")
