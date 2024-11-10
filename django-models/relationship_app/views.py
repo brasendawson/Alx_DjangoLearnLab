@@ -59,8 +59,14 @@ def user_logout(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
 
-class register(CreateView):
-    form_class = UserCreationForm
-    template_name = 'relationship_app/register.html'
-    success_url = reverse_lazy('login')  # Redirect to login after successful registration
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
 # Create your views here.
