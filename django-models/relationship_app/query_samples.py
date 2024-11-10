@@ -8,14 +8,21 @@ django.setup()
 from relationship_app.models import Author, Book, Library, Librarian
 
 
-# 1. Query all books by a specific author
+# 1. Query all books by a specific author using filter
 def get_books_by_author(author_name):
     try:
+        # Get the author object
         author = Author.objects.get(name=author_name)
-        books_by_author = author.books.all()
-        print(f"Books by {author_name}:")
-        for book in books_by_author:
-            print(f"- {book.title}")
+        
+        # Use filter to get books written by the author
+        books_by_author = Book.objects.filter(author=author)
+        
+        if books_by_author.exists():
+            print(f"Books by {author_name}:")
+            for book in books_by_author:
+                print(f"- {book.title}")
+        else:
+            print(f"{author_name} has not written any books.")
     except Author.DoesNotExist:
         print(f"No author found with the name '{author_name}'.")
 
@@ -42,3 +49,11 @@ def get_librarian_for_library(library_name):
             print(f"No librarian assigned to {library_name}.")
     except Library.DoesNotExist:
         print(f"No library found with the name '{library_name}'.")
+
+
+# Run sample queries
+if __name__ == '__main__':
+    # Replace these with actual names present in your database
+    get_books_by_author('J.K. Rowling')
+    list_books_in_library('Central Library')
+    get_librarian_for_library('Central Library')
