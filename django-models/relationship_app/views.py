@@ -98,5 +98,8 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
 
 # Create your views here.
