@@ -1,7 +1,7 @@
 from django.shortcuts import render
+from .views import list_books
 from .models import Book
 from django.views.generic.detail import DetailView
-from .views import list_books
 
 # Function-Based View to list all books
 def list_books(request):
