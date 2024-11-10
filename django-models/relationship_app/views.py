@@ -1,20 +1,29 @@
+from django.shortcuts import render
+from .models import Book
+from django.views.generic.detail import DetailView
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout  # Import login and logout functions
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm  # Import authentication and user creation forms
-from django.views.generic import DetailView, CreateView  # Import generic views
+from django.views.generic import CreateView
 from django.urls import reverse_lazy
-from .models import Book, Library  # Import models for Book and Library
+
 
 # Function-Based View to list all books
 def list_books(request):
-    books = Book.objects.all()  # Retrieve all books from the database
-    return render(request, 'relationship_app/list_books.html', {'books': books})  # Render the list_books template with books
+    # Get all books from the database
+    books = Book.objects.all()
+
+    # Render the 'list_books.html' template, passing the books context
+    return render(request, 'relationship_app/list_books.html', {'books': books})
+
+from django.views.generic import DetailView
+from .models import Library
 
 # Class-Based View to show details for a specific library
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
-    context_object_name = 'library'  # To use 'library' as the context name in the template
+    context_object_name = 'library'  # To use 'library' in the template context
 
 # Login view using Django's built-in LoginView
 def user_login(request):
@@ -22,19 +31,22 @@ def user_login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            login(request, user)  # Log the user in
-            return redirect('home')  # Redirect to a protected view (replace 'home' with actual URL name)
+            login(request, user)
+            return redirect('home')  # Redirect to the homepage or a protected view
     else:
         form = AuthenticationForm()
     return render(request, 'relationship_app/login.html', {'form': form})
 
 # Logout view using Django's built-in LogoutView
 def user_logout(request):
-    logout(request)  # Log the user out
-    return render(request, 'relationship_app/logout.html')  # Render logout confirmation page
+    logout(request)
+    return render(request, 'relationship_app/logout.html')
 
 # Registration view for creating new users
 class UserRegisterView(CreateView):
-    form_class = UserCreationForm  # Use the built-in UserCreationForm for registration
+    form_class = UserCreationForm
     template_name = 'relationship_app/register.html'
-    success_url = reverse_lazy('login')  # Redirect to the login page after successful registration
+    success_url = reverse_lazy('login')  # Redirect to login after successful registration
+
+
+# Create your views here.
