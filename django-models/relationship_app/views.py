@@ -8,9 +8,7 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 
 
-# Function-Based View to list all books
 def list_books(request):
-    # Get all books from the database
     books = Book.objects.all()
 
     # Render the 'list_books.html' template, passing the books context
@@ -19,13 +17,33 @@ def list_books(request):
 from django.views.generic import DetailView
 from .models import Library
 
-# Class-Based View to show details for a specific library
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'  # To use 'library' in the template context
 
-# Login view using Django's built-in LoginView
+
+def user_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'relationship_app/login.html', {'form': form})
+
+
+def user_logout(request):
+    logout(request)
+    return render(request, 'relationship_app/logout.html')
+
+class UserRegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'relationship_app/register.html'
+    success_url = reverse_lazy('login')
+
 def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -37,16 +55,12 @@ def user_login(request):
         form = AuthenticationForm()
     return render(request, 'relationship_app/login.html', {'form': form})
 
-# Logout view using Django's built-in LogoutView
 def user_logout(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
 
-# Registration view for creating new users
 class UserRegisterView(CreateView):
     form_class = UserCreationForm
     template_name = 'relationship_app/register.html'
     success_url = reverse_lazy('login')  # Redirect to login after successful registration
-
-
 # Create your views here.
