@@ -39,21 +39,18 @@ def list_books_in_library(library_name):
         print(f"No library found with the name '{library_name}'.")
 
 
-# 3. Retrieve the librarian for a specific library
+# 3. Retrieve the librarian for a specific library using OneToOne relationship
 def get_librarian_for_library(library_name):
     try:
+        # Get the library object
         library = Library.objects.get(name=library_name)
-        if hasattr(library, 'librarian'):
-            print(f"\nLibrarian for {library_name}: {library.librarian.name}")
-        else:
-            print(f"No librarian assigned to {library_name}.")
+        
+        # Retrieve the librarian using the OneToOne relationship
+        librarian = Librarian.objects.get(library=library)
+        
+        print(f"\nLibrarian for {library_name}: {librarian.name}")
     except Library.DoesNotExist:
         print(f"No library found with the name '{library_name}'.")
+    except Librarian.DoesNotExist:
+        print(f"No librarian assigned to {library_name}.")
 
-
-# Run sample queries
-if __name__ == '__main__':
-    # Replace these with actual names present in your database
-    get_books_by_author('J.K. Rowling')
-    list_books_in_library('Central Library')
-    get_librarian_for_library('Central Library')
