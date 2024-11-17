@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import permission_required
 from .models import Book
 from django.http import HttpResponse
 from .forms import BookForm
+from .forms import ExampleForm
 
 
 @permission_required('bookshelf.can_view', raise_exception=True)
@@ -36,24 +37,16 @@ def delete_book(request, book_id):
     return render(request, 'bookshelf/book_confirm_delete.html', {'book': book})
 
 
-# Example view with Django ORM to prevent SQL injection
-def search_books(request):
-    query = request.GET.get('query', '')
-    if query:
-        books = Book.objects.filter(title__icontains=query)  # Safe query using ORM
-    else:
-        books = Book.objects.all()  # Show all books if no query
-    return render(request, 'book_list.html', {'books': books})
-
-# Example form validation
 def add_book(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = ExampleForm(request.POST)
         if form.is_valid():
-            form.save()
-            return HttpResponse('Book added successfully')
+            # Process the form data
+            # For example, saving a new book:
+            Book.objects.create(title=form.cleaned_data['title'], author=form.cleaned_data['author'])
+            return render(request, 'add_book_success.html')
     else:
-        form = BookForm()
+        form = ExampleForm()
     return render(request, 'add_book.html', {'form': form})
 
 # Create your views here.
