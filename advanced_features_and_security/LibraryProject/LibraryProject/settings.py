@@ -131,10 +131,15 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')
 ALLOWED_HOSTS = ['yourdomain.com']
+ASGI_APPLICATION = 'DjangoBlog.asgi.application'
 
 MIDDLEWARE = [
-    # Other middleware
-    'csp.middleware.CSPMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',  # Must be before AuthenticationMiddleware
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # After SessionMiddleware
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    # Add any other middleware you need here...
 ]
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", 'https://apis.google.com')  # Example script source
