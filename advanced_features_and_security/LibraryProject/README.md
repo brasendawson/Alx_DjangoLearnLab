@@ -18,3 +18,18 @@
 # - Editors: Can create and edit books (permissions: can_create, can_edit).
 # - Viewers: Can only view books (permission: can_view).
 # - Admins: Can perform all actions (permissions: can_view, can_create, can_edit, can_delete).
+
+# Django Security Best Practices
+
+## Settings
+- `DEBUG` is set to `False` for production.
+- Security-related settings configured: XSS filter, X-Frame-Options, Content-Type-Nosniff, secure cookies.
+
+## CSRF Protection
+- All forms include `{% csrf_token %}` to protect against CSRF attacks.
+
+## SQL Injection Protection
+- All database queries are handled using Django's ORM to prevent SQL injection.
+
+## Content Security Policy (CSP)
+- `django-csp` middleware is used to enforce a Content Security Policy header.

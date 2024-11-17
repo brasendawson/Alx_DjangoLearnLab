@@ -131,3 +131,11 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')
 ALLOWED_HOSTS = ['yourdomain.com']
+
+MIDDLEWARE = [
+    # Other middleware
+    'csp.middleware.CSPMiddleware',
+]
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://apis.google.com')  # Example script source
+CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
