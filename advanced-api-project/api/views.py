@@ -12,6 +12,7 @@ class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     filter_backends = [filters.OrderingFilter]
+    filter_backends = [filters.SearchFilter]
     filterset_class = BookFilter
     search_fields = ['title', 'author']
     ordering_fields = ['title', 'publication_year', 'author']  # Specify the fields that can be used for ordering
