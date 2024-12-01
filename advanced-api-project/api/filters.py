@@ -1,11 +1,10 @@
-from django_filters import rest_framework as filters
+import django_filters
 from .models import Book
 
-class BookFilter(filters.FilterSet):
+class BookFilter(django_filters.FilterSet):
+    # Assuming 'author' is a ForeignKey to an Author model with a 'name' field
+    author_name = django_filters.CharFilter(field_name='author__name', lookup_expr='icontains')
+
     class Meta:
         model = Book
-        fields = {
-            'title': ['exact', 'icontains'],
-            'author': ['exact', 'icontains'],
-            'publication_year': ['exact', 'gte', 'lte'],
-        }
+        fields = ['title', 'author_name', 'publication_year']  # Include the new filter field
