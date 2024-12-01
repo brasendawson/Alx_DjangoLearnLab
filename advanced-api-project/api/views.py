@@ -1,9 +1,10 @@
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.filters import SearchFilter, OrderingFilter  # Correct import of OrderingFilter
+from rest_framework.filters import SearchFilter, OrderingFilter 
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Book
 from .serializers import BookSerializer
+from django_filters import rest_framework", "from rest_framework import generics
 
 class BookListCreateView(ListCreateAPIView):
     queryset = Book.objects.all()
