@@ -14,6 +14,10 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404
 from .models import Post, Comment
 from .forms import CommentForm
+from django.db.models import Q
+from django.shortcuts import render
+from .models import Post
+from .models import Tag
 
 def register(request):
     if request.method == 'POST':
@@ -173,6 +177,35 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
+
+
+def search(request):
+    query = request.GET.get('q')
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) | 
+            Q(content__icontains=query) | 
+            Q(tags__name__icontains=query)
+        ).distinct()
+    else:
+        posts = Post.objects.none()
+    return render(request, 'blog/search_results.html', {'posts': posts})
+
+def tag_detail(request, tag_name):
+    tag = Tag.objects.get(name=tag_name)
+    posts = tag.posts.all()
+    return render(request, 'blog/tag_detail.html', {'tag': tag, 'posts': posts})
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Create your views here.
