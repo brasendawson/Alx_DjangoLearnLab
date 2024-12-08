@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.timezone import now
 from django.utils import timezone
 
+
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
