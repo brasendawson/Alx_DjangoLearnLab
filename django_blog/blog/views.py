@@ -18,6 +18,11 @@ from django.db.models import Q
 from django.shortcuts import render
 from .models import Post
 from .models import Tag
+from django.views.generic.list import ListView
+from django.shortcuts import get_object_or_404
+from .models import Post
+from taggit.models import Tag
+
 
 def register(request):
     if request.method == 'POST':
@@ -195,6 +200,21 @@ def tag_detail(request, tag_name):
     tag = Tag.objects.get(name=tag_name)
     posts = tag.posts.all()
     return render(request, 'blog/tag_detail.html', {'tag': tag, 'posts': posts})
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'  # Use the same template for simplicity
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        self.tag = get_object_or_404(Tag, slug=tag_slug)  # Get the tag object
+        return Post.objects.filter(tags__in=[self.tag])  # Filter posts with the tag
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.tag
+        return context
 
 
 
