@@ -8,7 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Comment
 from .forms import CommentForm
-
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.shortcuts import get_object_or_404
+from .models import Post, Comment
+from .forms import CommentForm
 
 def register(request):
     if request.method == 'POST':
@@ -134,4 +139,40 @@ def comment_delete(request, pk):
         return redirect('post-detail', pk=comment.post.pk)
 
     return render(request, 'blog/comment_delete.html', {'comment': comment})
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_create.html'
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        form.instance.author = self.request.user  # Set the current user as the author
+        form.instance.post = post  # Associate the comment with the post
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('post-detail', kwargs={'pk': self.kwargs['pk']})
+
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_edit.html'
+
+    def get_queryset(self):
+        return Comment.objects.filter(author=self.request.user)  # Ensure users can only edit their own comments
+
+    def get_success_url(self):
+        return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
+
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def get_queryset(self):
+        return Comment.objects.filter(author=self.request.user)  # Ensure users can only delete their own comments
+
+    def get_success_url(self):
+        return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
+
+
 # Create your views here.
