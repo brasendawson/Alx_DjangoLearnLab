@@ -1,0 +1,8 @@
+<h3>Leave a Comment</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Post Comment</button>
+</form>
+
+<a href="{% url 'post-detail' pk=post.pk %}">Back to Post</a>
