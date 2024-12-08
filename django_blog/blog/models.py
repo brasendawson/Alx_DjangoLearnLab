@@ -2,10 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 from django.utils import timezone
+from taggit.managers import TaggableManager  # Import TaggableManager from taggit
 
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    tags = TaggableManager()  
 
     def __str__(self):
         return self.name
