@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Comment
 from .models import Post, Tag
+from taggit.forms import TagWidget  # Import TagWidget for customizing tag input
+
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -24,6 +26,9 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
+        widgets = {
+            'tags': TagWidget(),  # Use TagWidget for the 'tags' field
+        }
 
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
