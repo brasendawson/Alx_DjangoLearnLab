@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from .models import CustomUser
 from .serializers import UserSerializer, RegisterSerializer
+from django.shortcuts import get_object_or_404
 
 class RegisterView(APIView):
     def post(self, request):
@@ -32,4 +33,22 @@ class ProfileView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+class FollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_follow = get_object_or_404(CustomUser, id=user_id)
+        request.user.followers.add(user_to_follow)
+        return Response({"detail": f"You are now following {user_to_follow.username}"})
+
+class UnfollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
+        request.user.followers.remove(user_to_unfollow)
+        return Response({"detail": f"You have unfollowed {user_to_unfollow.username}"})
+
+
 # Create your views here.
