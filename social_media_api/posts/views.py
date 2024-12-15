@@ -15,6 +15,7 @@ from .models import Post, Like
 from .serializers import PostSerializer
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import get_object_or_404
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
@@ -63,10 +64,13 @@ class FeedView(APIView):
 
 class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    
 
     def post(self, request, pk):
-        post = Post.objects.get(id=pk)
+        post = get_object_or_404(Post, pk=pk)
         user = request.user
+
+        like, created = Like.objects.get_or_create(post=post, user=user)
 
         if Like.objects.filter(post=post, user=user).exists():
             return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
