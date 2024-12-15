@@ -7,7 +7,7 @@ from taggit.managers import TaggableManager  # Import TaggableManager from taggi
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    tags = TaggableManager()  
+      
 
     def __str__(self):
         return self.name
@@ -19,7 +19,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
-    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
+    tags = TaggableManager()
 
     def __str__(self):
         return self.title

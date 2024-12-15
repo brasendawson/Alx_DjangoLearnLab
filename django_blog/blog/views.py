@@ -206,17 +206,19 @@ class PostByTagListView(ListView):
     template_name = 'blog/post_list.html'  # Use the same template for simplicity
     context_object_name = 'posts'
 
-    def get_queryset(self):
-        tag_slug = self.kwargs.get('tag_slug')
-        self.tag = get_object_or_404(Tag, slug=tag_slug)  # Get the tag object
-        return Post.objects.filter(tags__in=[self.tag])  # Filter posts with the tag
+def get_queryset(self):
+    tag_slug = self.kwargs.get('tag_slug')
+    self.tag = get_object_or_404(Tag, slug=tag_slug)  # Get the tag object
+    return Post.objects.filter(tags__in=[self.tag])  # Filter posts with the tag
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['tag'] = self.tag
-        return context
+def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['tag'] = self.tag
+    return context
 
 
+def base_template_view(request):
+    return render(request, 'base.html')
 
 
 
