@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 from .models import CustomUser
 from .serializers import UserSerializer, RegisterSerializer
 from django.shortcuts import get_object_or_404
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 class RegisterView(APIView):
     def post(self, request):
@@ -37,6 +37,7 @@ class ProfileView(APIView):
 
 class FollowUserView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
+    permissions.IsAuthenticated
 
     def post(self, request, user_id):
         user_to_follow = get_object_or_404(CustomUser, id=user_id)
@@ -45,6 +46,7 @@ class FollowUserView(generics.GenericAPIView):
 
 class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
+    permissions.IsAuthenticated
 
     def post(self, request, user_id):
         user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
