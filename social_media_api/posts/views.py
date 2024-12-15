@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework import filters
@@ -64,13 +64,15 @@ class FeedView(APIView):
 
 class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    
 
     def post(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         user = request.user
+        generics.get_object_or_404(Post, pk=pk)
 
         like, created = Like.objects.get_or_create(user=user, post=post)
-
+        Like.objects.get_or_create(user=request.user, post=post)
         if not created:
             return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -90,8 +92,11 @@ class UnlikePostView(APIView):
     def post(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         user = request.user
+        generics.get_object_or_404(Post, pk=pk)
 
         like = Like.objects.filter(post=post, user=user).first()
+        Like.objects.get_or_create(user=request.user, post=post)
+
         if not like:
             return Response({"detail": "You haven't liked this post yet."}, status=status.HTTP_400_BAD_REQUEST)
 
