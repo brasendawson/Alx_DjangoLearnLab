@@ -91,8 +91,10 @@ class UnlikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = Post.objects.get(id=pk)
+        post = get_object_or_404(Post, pk=pk)
         user = request.user
+
+    
 
         like = Like.objects.filter(post=post, user=user).first()
         if not like:
