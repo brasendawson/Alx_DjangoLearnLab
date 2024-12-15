@@ -13,5 +13,3 @@ class LoginView(ObtainAuthToken):
         token = response.data['token']
         user = Token.objects.get(key=token).user
         return Response({'token': token, 'user': UserSerializer(user).data})
-
-# Create your views here.
